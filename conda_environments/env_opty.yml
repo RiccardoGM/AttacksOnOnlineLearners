@@ -1,4 +1,4 @@
-name: py3_6_12_V3_PYPI
+name: env_opty
 channels:
   - anaconda
   - pytorch
@@ -364,4 +364,4 @@ dependencies:
     - requests-unixsocket==0.2.0
     - sniffio==1.2.0
     - websocket-client==1.2.1
-prefix: /opt/anaconda3/envs/py3_6_12_V3_PYPI
+prefix: /opt/anaconda3/envs/env_opty

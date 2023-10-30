@@ -1,4 +1,4 @@
-name: Stable_Baselines3
+name: env_reinforcement_learning
 channels:
   - anaconda
   - conda-forge
@@ -145,4 +145,4 @@ dependencies:
     - sympy==1.11.1
     - torch==2.0.0
     - torchvision==0.15.1
-prefix: /opt/anaconda3/envs/Stable_Baselines3
+prefix: /opt/anaconda3/envs/env_reinforcement_learning
