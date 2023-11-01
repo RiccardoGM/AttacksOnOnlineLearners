@@ -15,8 +15,8 @@ import numpy as np
 
 import sys
 import os
-local_path = 'path_to_progect_folder/'
-sys.path.append(local_path+'OptimalControlAttacks/')
+local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
+sys.path.append(local_path+'OptimalControlAttacks/RealDataExperiments/')
 from Modules import EmpiricalGreedyAttacksPytorch as EGAP
 
 
@@ -59,7 +59,7 @@ n_samples_test_mini = 100
 a_min = -0 #0
 a_max = 1-a_min #1
 n_gridpoints = 21
-control_cost_pref = 1.
+control_cost_pref = 1. #1.
 control_cost_pref_arr = 10**np.linspace(-2., 2.4, 9)
 fut_pref = 1.
 future_weight = fut_pref / learning_rate
@@ -69,14 +69,14 @@ n_runs_experiments = 10
 n_runs_calibration = 1
 
 # Paths
-path_data = local_path + 'OptimalControlAttacks/ModelsData/CIFAR10/Classes_%d_%d/ResNet18Transf/'%(class1, class2)
-path_results = local_path + 'OptimalControlAttacks/Results/CIFAR10/Classes_%d_%d/ResNet18Transf/'%(class1, class2)
+path_data = local_path + 'OptimalControlAttacks//ModelsData/CIFAR10/Classes_%d_%d/VGG11Transf/'%(class1, class2)
+path_results = local_path + 'OptimalControlAttacks//Results/CIFAR10/Classes_%d_%d/VGG11Transf/'%(class1, class2)
 
 
 
 ##############################################################
 #                                                            #
-#               ResNet CIFAR10 prelastfc data                #
+#                 VGG CIFAR10 prelastfc data                 #
 #                                                            #
 ##############################################################
 
@@ -253,7 +253,7 @@ for i, c_pref in enumerate(control_cost_pref_arr):
 ##############################################################
 
 # Define string describing experiment
-model_name = '_model#ResNet18CIFAR#%d#%d' % (class1, class2)
+model_name = '_model#VGG11CIFAR#%d#%d' % (class1, class2)
 experiment_parameters_values = (dim_input, a_min, a_max, gamma*1000, 100*learning_rate/dim_input,
                                 100*w_regularizer, n_runs_experiments, n_runs_calibration)
 experiment_parameters = '_dinput#%d_amin#%d_amax#%d_gamma1000#%d_lrpref100#%d_wreg100#%d_nav#%d_navopt#%d' % experiment_parameters_values

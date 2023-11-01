@@ -14,13 +14,12 @@ import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader
 
 import copy
-from collections import namedtuple
 import numpy as np
 
 import sys
 import os
-local_path = 'path_to_progect_folder/'
-sys.path.append(local_path+'OptimalControlAttacks/')
+local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
+sys.path.append(local_path+'OptimalControlAttacks/RealDataExperiments/')
 from Modules import EmpiricalGreedyAttacksPytorch as EGAP
 
 
@@ -44,12 +43,14 @@ degrees = 10
 
 # Dynamics parameters
 batch_size = 10
-n_epochs = 100
+n_epochs = 50
 
-# Strings/paths
-path_data = local_path + 'OptimalControlAttacks/ModelsData/CIFAR10/Classes_%d_%d/ResNetTransf/'%(class1, class2)
-path_models = local_path + 'OptimalControlAttacks/Models/CIFAR10/Classes_%d_%d/ResNetTransf/'%(class1, class2)
+# # Strings/paths
+path_data = local_path + 'OptimalControlAttacks/ModelsData/CIFAR10/Classes_%d_%d/VGGNetTransf/'%(class1, class2)
+path_models = local_path + 'OptimalControlAttacks/Models/CIFAR10/Classes_%d_%d/VGGNetTransf/'%(class1, class2)
 description = 'classes#%d#%d_epochs#%d_batchnorm#%s'%(class1, class2, n_epochs, batchnorm_lastfc)
+
+
 
 ##############################################################
 #                                                            #
@@ -106,8 +107,6 @@ targets[mask] = label_class2
 testset.targets = list(targets)
 testset_loader = DataLoader(testset, batch_size=batch_size, shuffle=False)
 
-
-
 ##############################################################
 #                                                            #
 #                       Import model                         #
@@ -115,9 +114,9 @@ testset_loader = DataLoader(testset, batch_size=batch_size, shuffle=False)
 ##############################################################
 
 # Teacher model
-ResNetConfig = namedtuple('ResNetConfig', ['block', 'n_blocks', 'channels'])
-resnet18_config = ResNetConfig(block = EGAP.BasicBlock, n_blocks = [2,2,2,2], channels = [64, 128, 256, 512])
-teacher_model = EGAP.ResNet(resnet18_config, dobatchnorm=batchnorm_lastfc)
+vgg11_config = [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M']
+vgg11_layers = EGAP.get_vgg_layers(vgg11_config, batch_norm=True)
+teacher_model = EGAP.VGG_ErfOutput(vgg11_layers, denselayers_width=4096, dobatchnorm=batchnorm_lastfc)
 model_name = 'epoch%d_' % n_epochs + description + '.pth'
 teacher_model.load_state_dict(torch.load(path_models+model_name, map_location=torch.device('cpu')))
 

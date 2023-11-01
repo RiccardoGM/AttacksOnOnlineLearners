@@ -18,8 +18,8 @@ import numpy as np
 
 import sys
 import os
-local_path = 'path_to_progect_folder/'
-sys.path.append(local_path+'OptimalControlAttacks/')
+local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
+sys.path.append(local_path+'OptimalControlAttacks/RealDataExperiments/')
 from Modules import EmpiricalGreedyAttacksPytorch as EGAP
 
 
@@ -38,16 +38,17 @@ class1 = 3 # 3-cat, 4-deer
 label_class1 = 1
 class2 = 5 # 5-dog, 7-horse
 label_class2 = -1
-edge_length = 224 # 32 224
+edge_length = 224
 degrees = 10
 
 # Dynamics parameters
-batch_size = 10
+learning_rate = 1e-3
 n_epochs = 50
+saving_Depochs = 5
+batch_size = 20
 
-# # Strings/paths
-path_data = local_path + 'OptimalControlAttacks/ModelsData/CIFAR10/Classes_%d_%d/VGGNetTransf/'%(class1, class2)
-path_models = local_path + 'OptimalControlAttacks/Models/CIFAR10/Classes_%d_%d/VGGNetTransf/'%(class1, class2)
+# Strings/paths
+path_models = local_path + 'OptimalControlAttacks/Models/CIFAR10/Classes_%d_%d/VGGNetTransf/' % (class1, class2)
 description = 'classes#%d#%d_epochs#%d_batchnorm#%s'%(class1, class2, n_epochs, batchnorm_lastfc)
 
 
@@ -105,86 +106,98 @@ targets[mask] = label_class1
 mask = targets==class2
 targets[mask] = label_class2
 testset.targets = list(targets)
-testset_loader = DataLoader(testset, batch_size=batch_size, shuffle=False)
+testset_loader = DataLoader(testset, batch_size=2000, shuffle=False)
+testset_iterator = iter(testset_loader)
+sample = next(testset_iterator)
+test_input, test_label = sample[0], sample[1]
+test_input_subset = test_input[0:500]
+test_label_subset = test_label[0:500]
+
+
 
 ##############################################################
 #                                                            #
-#                       Import model                         #
+#                       Define model                         #
 #                                                            #
 ##############################################################
 
 # Teacher model
 vgg11_config = [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M']
 vgg11_layers = EGAP.get_vgg_layers(vgg11_config, batch_norm=True)
-teacher_model = EGAP.VGG_ErfOutput(vgg11_layers, denselayers_width=4096, dobatchnorm=batchnorm_lastfc)
-model_name = 'epoch%d_' % n_epochs + description + '.pth'
-teacher_model.load_state_dict(torch.load(path_models+model_name, map_location=torch.device('cpu')))
+teacher_model = EGAP.VGG(vgg11_layers, denselayers_width=4096, dobatchnorm=batchnorm_lastfc)
+teacher_model_dict = teacher_model.state_dict()
 
-# Extract teacher weights
-parameters = teacher_model.lastfc.weight
-dim_input = len(parameters.detach().flatten())
-parameters_perceptron = (parameters.detach().cpu().flatten().numpy())*dim_input**0.5
+# Pre-trained weights
+pretrained_model = models.vgg11_bn(pretrained=True)
+pretrained_dict = pretrained_model.state_dict()
+
+# 1. filter out unnecessary keys
+pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in teacher_model_dict and k not in ['classifier.6.weight', 'classifier.6.bias']}
+# 2. overwrite entries in the existing state dict
+teacher_model_dict.update(pretrained_dict)
+# 3. load the new state dict
+teacher_model.load_state_dict(teacher_model_dict)
+
+# Freeze pre-trained layers
+req_grad = False
+for name, param in teacher_model.named_parameters():
+    if name in pretrained_dict.keys():
+        param.requires_grad = req_grad
 
 
 
 ##############################################################
 #                                                            #
-#                    Create training data                    #
+#                       Run training                         #
 #                                                            #
 ##############################################################
-
-n_epochs = 10
-n_samples = len(trainset_loader.dataset)
-data_prelastfc_train = np.zeros((n_epochs*n_samples, dim_input))
-data_label_train = np.zeros(n_epochs*n_samples)
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 teacher_model.to(device)
-teacher_model.eval()
+criterion = nn.MSELoss().to(device)
+optimizer = optim.Adam(teacher_model.parameters(), lr=learning_rate)
+test_input_subset, test_label_subset = test_input_subset.to(device), test_label_subset.to(device)
+loss_list = []
+acc_list = []
+
+# Run training
 for epoch in range(n_epochs):
-    for idx, (x, label) in enumerate(trainset_loader):
-        x, label = x.to(device), label.to(device)
-        prelastfc_batch = teacher_model.forward_prelastfc(x)
-        idx_start = idx*batch_size + epoch*n_samples
-        idx_end = (idx+1)*batch_size + epoch*n_samples
-        data_prelastfc_train[idx_start:idx_end,:] = prelastfc_batch.detach().cpu().numpy()
-        data_label_train[idx_start:idx_end] = label.detach().cpu().numpy()
 
+    # Backprop
+    teacher_model.train()
+    for idx, (batch_input, batch_label) in enumerate(trainset_loader):
+        batch_input, batch_label = batch_input.to(device), batch_label.to(device)
+        pred_label = teacher_model(batch_input)
+        loss = criterion(pred_label.flatten().double(), batch_label.flatten().double())
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
+    # Evaluate accuracy
+    teacher_model.eval()
+    with torch.no_grad():
+        acc_num = torch.sum(torch.sign(teacher_model(test_input_subset)).flatten()==test_label_subset)
+        acc_denom = len(test_label_subset)
+        acc = acc_num/acc_denom
 
-##############################################################
-#                                                            #
-#                      Create test data                      #
-#                                                            #
-##############################################################
+    loss_list.append(loss.detach().cpu().numpy())
+    acc_list.append(acc.detach().cpu().numpy())
 
-n_samples = len(testset_loader.dataset)
-data_prelastfc_test = np.zeros((n_samples, dim_input))
-data_label_test = np.zeros(n_samples)
+    # Save model
+    if (epoch+1)%saving_Depochs==0:
+        model_name = 'epoch%d_' % (epoch+1)
+        model_name = model_name + description + '.pth'
+        torch.save(teacher_model.state_dict(), path_models+model_name)
 
-for idx, (x, label) in enumerate(testset_loader):
-    x, label = x.to(device), label.to(device)
-    prelastfc_batch = teacher_model.forward_prelastfc(x)
-    data_prelastfc_test[idx*batch_size:(idx+1)*batch_size,:] = prelastfc_batch.detach().cpu().numpy()
-    data_label_test[idx*batch_size:(idx+1)*batch_size] = label.detach().cpu().numpy()
+    # Print progress
+    print('epoch: {}, loss: {}, acc: {}'.format(epoch, loss, acc))
 
+print('Training complete!')
 
-
-##############################################################
-#                                                            #
-#                        Export data                         #
-#                                                            #
-##############################################################
-
-filename = 'train_prelastfc_input'
-np.save(path_data+filename, data_prelastfc_train)
-filename = 'train_prelastfc_label'
-np.save(path_data+filename, data_label_train)
-
-filename = 'test_prelastfc_input'
-np.save(path_data+filename, data_prelastfc_test)
-filename = 'test_prelastfc_label'
-np.save(path_data+filename, data_label_test)
-
-filename = 'teacher_parameters'
-np.save(path_data+filename, parameters_perceptron)
+# Save training dynamics
+loss_arr = np.array(loss_list)
+name_file = 'lossdynamics_' + description
+np.save(path_models+name_file, loss_arr)
+acc_arr = np.array(acc_list)
+name_file = 'accdynamics_' + description
+np.save(path_models+name_file, acc_arr)

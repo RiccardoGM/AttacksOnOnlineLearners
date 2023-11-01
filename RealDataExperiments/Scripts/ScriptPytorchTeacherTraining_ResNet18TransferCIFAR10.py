@@ -14,12 +14,13 @@ import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader
 
 import copy
+from collections import namedtuple
 import numpy as np
 
 import sys
 import os
-local_path = 'path_to_progect_folder/'
-sys.path.append(local_path+'OptimalControlAttacks/')
+local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
+sys.path.append(local_path+'OptimalControlAttacks/RealDataExperiments/')
 from Modules import EmpiricalGreedyAttacksPytorch as EGAP
 
 
@@ -43,12 +44,12 @@ degrees = 10
 
 # Dynamics parameters
 learning_rate = 1e-3
-n_epochs = 50
-saving_Depochs = 5
-batch_size = 20
+n_epochs = 100
+saving_Depochs = 10
+batch_size = 100
 
 # Strings/paths
-path_models = local_path + 'OptimalControlAttacks/Models/CIFAR10/Classes_%d_%d/VGGNetTransf/' % (class1, class2)
+path_models = local_path + 'OptimalControlAttacks/Models/CIFAR10/Classes_%d_%d/ResNetTransf/' % (class1, class2)
 description = 'classes#%d#%d_epochs#%d_batchnorm#%s'%(class1, class2, n_epochs, batchnorm_lastfc)
 
 
@@ -122,17 +123,17 @@ test_label_subset = test_label[0:500]
 ##############################################################
 
 # Teacher model
-vgg11_config = [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M']
-vgg11_layers = EGAP.get_vgg_layers(vgg11_config, batch_norm=True)
-teacher_model = EGAP.VGG(vgg11_layers, denselayers_width=4096, dobatchnorm=batchnorm_lastfc)
+ResNetConfig = namedtuple('ResNetConfig', ['block', 'n_blocks', 'channels'])
+resnet18_config = ResNetConfig(block = EGAP.BasicBlock, n_blocks = [2,2,2,2], channels = [64, 128, 256, 512])
+teacher_model = EGAP.ResNet(resnet18_config, dobatchnorm=batchnorm_lastfc)
 teacher_model_dict = teacher_model.state_dict()
 
 # Pre-trained weights
-pretrained_model = models.vgg11_bn(pretrained=True)
+pretrained_model = models.resnet18(pretrained=True)
 pretrained_dict = pretrained_model.state_dict()
 
 # 1. filter out unnecessary keys
-pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in teacher_model_dict and k not in ['classifier.6.weight', 'classifier.6.bias']}
+pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in teacher_model_dict and k not in ['fc.weight', 'fc.bias']}
 # 2. overwrite entries in the existing state dict
 teacher_model_dict.update(pretrained_dict)
 # 3. load the new state dict

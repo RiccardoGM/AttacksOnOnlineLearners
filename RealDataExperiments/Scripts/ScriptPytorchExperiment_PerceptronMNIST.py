@@ -16,8 +16,8 @@ from sklearn.preprocessing import StandardScaler
 
 import sys
 import os
-local_path = 'path_to_progect_folder/'
-sys.path.append(local_path+'OptimalControlAttacks/')
+local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
+sys.path.append(local_path+'OptimalControlAttacks/RealDataExperiments/')
 from Modules import EmpiricalGreedyAttacksPytorch as EGAP
 from Parameters import ParametersPerceptronMNIST as Par
 

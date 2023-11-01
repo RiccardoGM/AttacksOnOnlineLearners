@@ -45,7 +45,7 @@ n_samples_test = 1000
 
 # Control parameters
 a_min = -0
-a_max = 1-a_min 
+a_max = 1-a_min
 n_gridpoints = 21
 # take index as input
 control_cost_pref_arr = 10**np.arange(-2., 2.5, .5)
@@ -66,8 +66,8 @@ n_runs_experiments = 10
 
 # Strings/paths
 export_while_running = True
-local_path = 'path_to_progect_folder/'
-export_path = local_path + 'OptimalControlAttacks/Results/PerceptronMNIST/'
+local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
+export_path = local_path + 'OptimalControlAttacks/RealDataExperiments/Results/PerceptronMNIST/'
 values_1 = (dim_input, a_min, a_max, n_gridpoints)
 exp_description_1 = '_dinput#%d_amin#%d_amax#%d_ngridpoints#%d' % values_1
 values_2 = (n_timesteps_transient_th, gamma*1000, 100*learning_rate)
