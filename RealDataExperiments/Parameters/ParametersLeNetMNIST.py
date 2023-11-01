@@ -24,7 +24,7 @@ learning_rate_LeNet = 1e-2
 learning_rate = learning_rate_LeNet
 gamma = 0.995
 beta = -np.log(gamma)
-transient_th = 25000
+transient_th = 1000 #25000
 momentum = 0.
 w_regularizer = 0
 
@@ -66,8 +66,8 @@ n_runs_experiments = 10
 export_while_running = True
 local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
 export_path = local_path + 'OptimalControlAttacks/RealDataExperiments/Results/LeNetMNIST/'
-values_1 = (100*control_cost_pref, batch_size, a_min, a_max, n_gridpoints)
-exp_description_1 = 'cprefdiv100#%d_batchsize#%d_amin#%d_amax#%d_ngridpoints#%d' % values_1
+values_1 = (a_min, a_max, n_gridpoints)
+exp_description_1 = 'amin#%d_amax#%d_ngridpoints#%d' % values_1
 values_2 = (n_timesteps_transient_th, gamma*1000, 100*learning_rate, 10*momentum)
 exp_description_2 = exp_description_1 + '_nstepstransient#%d_gamma1000#%d_lrdiv100#%d_momentumdiv10#%d' % values_2
 if w_regularizer>0:

@@ -69,7 +69,7 @@ export_while_running = True
 local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
 export_path = local_path + 'OptimalControlAttacks/RealDataExperiments/Results/PerceptronMNIST/'
 values_1 = (dim_input, a_min, a_max, n_gridpoints)
-exp_description_1 = '_dinput#%d_amin#%d_amax#%d_ngridpoints#%d' % values_1
+exp_description_1 = 'dinput#%d_amin#%d_amax#%d_ngridpoints#%d' % values_1
 values_2 = (n_timesteps_transient_th, gamma*1000, 100*learning_rate)
 exp_description_2 = exp_description_1 + '_nstepstransient#%d_gamma1000#%d_lrdiv100#%d' % values_2
 if teacher_smoothlabels:

@@ -171,7 +171,7 @@ for i in range(n_past_experiments, n_past_experiments + n_runs_experiments):
     run_idx = i+1
     print('run %d/%d'%(run_idx, n_runs_experiments))
     values = (100*control_cost_pref, batch_size, run_idx)
-    exp_description_head = 'cprefdiv100#%d_batchsize#%d__run#%d_' % values
+    exp_description_head = 'cprefdiv100#%d_batchsize#%d_run#%d__@@__' % values
     experiment_description = exp_description_head + exp_description
 
     # Set future weight opt. parameters

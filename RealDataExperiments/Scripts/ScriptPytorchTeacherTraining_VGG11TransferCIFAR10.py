@@ -48,7 +48,7 @@ saving_Depochs = 5
 batch_size = 20
 
 # Strings/paths
-path_models = local_path + 'OptimalControlAttacks/Models/CIFAR10/Classes_%d_%d/VGGNetTransf/' % (class1, class2)
+path_models = local_path + 'OptimalControlAttacks/RealDataExperiments/Models/CIFAR10/Classes_%d_%d/VGG11/' % (class1, class2)
 description = 'classes#%d#%d_epochs#%d_batchnorm#%s'%(class1, class2, n_epochs, batchnorm_lastfc)
 
 

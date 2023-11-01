@@ -49,7 +49,7 @@ saving_Depochs = 10
 batch_size = 100
 
 # Strings/paths
-path_models = local_path + 'OptimalControlAttacks/Models/CIFAR10/Classes_%d_%d/ResNetTransf/' % (class1, class2)
+path_models = local_path + 'OptimalControlAttacks/RealDataExperiments/Models/CIFAR10/Classes_%d_%d/ResNet/' % (class1, class2)
 description = 'classes#%d#%d_epochs#%d_batchnorm#%s'%(class1, class2, n_epochs, batchnorm_lastfc)
 
 

@@ -82,7 +82,7 @@ if custom_w_fut:
 # Strings/paths
 export_while_running = Par.export_while_running
 export_path = Par.export_path
-export_path_local = Par.export_path_local
+
 
 
 ##############################################################
@@ -133,8 +133,8 @@ for i in range(n_past_experiments, n_past_experiments + n_runs_experiments):
     run_idx = i+1
     print('run %d/%d'%(run_idx, n_runs_experiments))
     exp_description = Par.exp_description
-    values = (100*weight_fut, run_idx)
-    exp_description_head = 'weightfutdiv100#%d_run#%d__@@__' % values
+    values = (100*control_cost_pref, batch_size, 100*weight_fut, run_idx)
+    exp_description_head = 'cprefdiv100#%d_batchsize#%d_weightfutdiv100#%d_run#%d__@@__' % values
     exp_description = exp_description_head + exp_description
 
     EGAP.labelleddata_exp_greedy(model_type=model_type,
