@@ -25,7 +25,7 @@ learning_rate_Perc = dim_input * 1e-2
 learning_rate = learning_rate_Perc
 gamma = 0.995
 beta = -np.log(gamma)
-transient_th = 2000 #10000
+transient_th = 10000 #10000
 momentum = 0.
 
 
@@ -54,6 +54,7 @@ weight_future = dim_input * learning_rate**-1
 fut_pref = 1 #2.
 fut_pref_arr = 10**np.linspace(-1, 1, 10)
 opt_pref = True
+calibrate_first_run_only = False
 fut_pref_interval = .5
 fut_pref_min = 1.
 fut_pref_max = 5. + fut_pref_interval

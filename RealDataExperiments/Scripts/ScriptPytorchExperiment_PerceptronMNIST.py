@@ -70,6 +70,7 @@ control_cost_pref_arr = Par.control_cost_pref_arr
 fut_pref = Par.fut_pref
 weight_future = Par.weight_future
 opt_pref = Par.opt_pref
+calibrate_first_run_only = Par.calibrate_first_run_only
 fut_pref_interval = Par.fut_pref_interval
 fut_pref_min = Par.fut_pref_min
 fut_pref_max = Par.fut_pref_max
@@ -175,12 +176,13 @@ for i in range(n_past_experiments, n_past_experiments + n_runs_experiments):
 
     # Set future weight opt. parameters
     if Par.opt_pref:
-        if run_idx==1:
-            opt_pref = True
-            fut_pref = Par.fut_pref
-        else:
-            opt_pref = False
-            fut_pref = results['fut_pref']
+        if calibrate_first_run_only:
+            if run_idx==1:
+                opt_pref = True
+                fut_pref = Par.fut_pref
+            else:
+                opt_pref = False
+                fut_pref = results['fut_pref']
 
     results = EGAP.labelleddata_exp_greedy(model_type=model_type,
                                            dataset=dataset,
