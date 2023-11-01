@@ -69,8 +69,8 @@ n_runs_experiments = 10
 n_runs_calibration = 1
 
 # Paths
-path_data = local_path + 'OptimalControlAttacks//ModelsData/CIFAR10/Classes_%d_%d/VGG11Transf/'%(class1, class2)
-path_results = local_path + 'OptimalControlAttacks//Results/CIFAR10/Classes_%d_%d/VGG11Transf/'%(class1, class2)
+path_data = local_path + 'OptimalControlAttacks/RealDataExperiments/ModelsData/CIFAR10/Classes_%d_%d/VGG11/'%(class1, class2)
+path_results = local_path + 'OptimalControlAttacks/RealDataExperiments/Results/TransferLearningCIFAR10/Classes_%d_%d/VGG11/'%(class1, class2)
 
 
 
@@ -223,7 +223,6 @@ for i, c_pref in enumerate(control_cost_pref_arr):
                                                                 fut_pref_min=fut_pref_min,
                                                                 fut_pref_max=fut_pref_max,
                                                                 fut_pref_interval=fut_pref_interval,
-                                                                n_av=n_runs_experiments,
                                                                 fut_pref=fut_pref,
                                                                 w_regularizer=w_regularizer)
 

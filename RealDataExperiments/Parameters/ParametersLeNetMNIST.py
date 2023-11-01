@@ -65,7 +65,7 @@ n_runs_experiments = 10
 # Strings/paths
 export_while_running = True
 local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
-export_path = local_path + 'OptimalControlAttacks/RealDataExperiments/Results/LeNetMNIST/'
+export_path = local_path + 'OptimalControlAttacks/RealDataExperiments/Results/FullTrainingMNIST/Classes_%d_%d/LeNet/'%(class1, class2)
 values_1 = (a_min, a_max, n_gridpoints)
 exp_description_1 = 'amin#%d_amax#%d_ngridpoints#%d' % values_1
 values_2 = (n_timesteps_transient_th, gamma*1000, 100*learning_rate, 10*momentum)

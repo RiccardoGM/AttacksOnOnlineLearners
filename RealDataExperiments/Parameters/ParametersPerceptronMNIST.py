@@ -67,7 +67,7 @@ n_runs_experiments = 10
 # Strings/paths
 export_while_running = True
 local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
-export_path = local_path + 'OptimalControlAttacks/RealDataExperiments/Results/PerceptronMNIST/'
+export_path = local_path + 'OptimalControlAttacks/RealDataExperiments/Results/FullTrainingMNIST/Classes_%d_%d/Perceptron/'%(class1, class2)
 values_1 = (dim_input, a_min, a_max, n_gridpoints)
 exp_description_1 = 'dinput#%d_amin#%d_amax#%d_ngridpoints#%d' % values_1
 values_2 = (n_timesteps_transient_th, gamma*1000, 100*learning_rate)

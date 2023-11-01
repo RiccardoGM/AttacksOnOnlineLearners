@@ -988,7 +988,8 @@ def labelleddata_exp_greedy_ErfTL(trainset, testset, w_teach, n_timesteps, n_pas
 
     if opt_pref:
         upper_bound_pref_fut = max(fut_pref_grid_opt)
-        print('Optimising future weight pre-factor between %.4f and %.4f'%(fut_pref_min, upper_bound_pref_fut))
+        print('Optimising future weight pre-factor between %.2f and %.2f'%(fut_pref_min, upper_bound_pref_fut))
+        print('N. grid points for future weight: %d' % len(fut_pref_grid_opt))
         print('N past timesteps:', n_past_timesteps)
         fut_pref_grid = fut_pref_grid_opt
 
