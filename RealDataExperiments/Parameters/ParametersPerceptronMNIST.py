@@ -25,7 +25,7 @@ learning_rate_Perc = dim_input * 1e-2
 learning_rate = learning_rate_Perc
 gamma = 0.995
 beta = -np.log(gamma)
-transient_th = 10000
+transient_th = 2000 #10000
 momentum = 0.
 
 
@@ -48,6 +48,7 @@ a_min = -0
 a_max = 1-a_min
 n_gridpoints = 21
 # take index as input
+control_cost_pref = 1.
 control_cost_pref_arr = 10**np.arange(-2., 2.5, .5)
 weight_future = dim_input * learning_rate**-1
 fut_pref = 1 #2.
@@ -56,8 +57,6 @@ opt_pref = True
 fut_pref_interval = .5
 fut_pref_min = 1.
 fut_pref_max = 5. + fut_pref_interval
-n_av_opt = 4
-
 
 # N. averages
 n_past_experiments = 0

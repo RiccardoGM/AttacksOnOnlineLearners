@@ -375,7 +375,7 @@ def labelleddata_exp_greedy(model_type, dataset, n_timesteps, n_past_timesteps, 
                             weight_future=[], a_min=0, a_max=1, n_gridpoints=100, beta=0.001, control_cost_pref=1.,
                             batch_size=1, buffer_size=1000, test_size=1000, transient_th=10000, window_steadystate=1000,
                             activation='Erf', opt_pref=False, fut_pref_min=0.1, fut_pref_max=5.1, fut_pref_interval=0.1,
-                            n_av=10, fut_pref=1., momentum=0., w_regularizer=0, attacker_on=True, export_while_running=False,
+                            fut_pref=1., momentum=0., w_regularizer=0, attacker_on=True, export_while_running=False,
                             export_results=False, export_path=None, exp_description=None, use_cuda_if_available=True,
                             teacher_smoothlabels=False, optimizer_type='SGD', fraction_poisoned_samples=1.):
 
@@ -556,6 +556,7 @@ def labelleddata_exp_greedy(model_type, dataset, n_timesteps, n_past_timesteps, 
 
     if teacher_smoothlabels:
         # Copy clean model into teacher
+        model_teach = copy.deepcopy(model_stud)
         model_teach.to(device)
 
         # Re-set clean test labels
@@ -684,7 +685,8 @@ def labelleddata_exp_greedy(model_type, dataset, n_timesteps, n_past_timesteps, 
 
         if opt_pref:
             upper_bound_pref_fut = max(fut_pref_grid_opt)
-            print('Optimising future weight pre-factor between %.4f and %.4f'%(fut_pref_min, upper_bound_pref_fut))
+            print('Optimising future weight pre-factor between %.2f and %.2f'%(fut_pref_min, upper_bound_pref_fut))
+            print('N. grid points for future weight: %d' % len(fut_pref_grid_opt))
             print('N past timesteps:', n_past_timesteps)
             fut_pref_grid = fut_pref_grid_opt
 
@@ -704,7 +706,7 @@ def labelleddata_exp_greedy(model_type, dataset, n_timesteps, n_past_timesteps, 
                     raise ValueError('Optimizer type must be SGD or Adam.')
                 optimizer_copy.load_state_dict(optimizer.state_dict()) # copy state
 
-                # Run dynamics using past data
+                # Run dynamics using past data <- improvable: running multiple dynamics
                 av_running_cost_ss = 0
                 for t in range(n_past_timesteps):
 
@@ -899,7 +901,7 @@ def labelleddata_exp_greedy_ErfTL(trainset, testset, w_teach, n_timesteps, n_pas
                                   weight_future=[], w_stud_0=[], a_min=0, a_max=1, beta=0.001, control_cost_pref=1.,
                                   batch_size=1, n_gridpoints=int(1e3), buffer_size=250, transient_th=10000,
                                   window_steadystate=1000, activation='Erf', opt_pref=False, fut_pref_min=0.1,
-                                  fut_pref_max=5.1, fut_pref_interval=0.1, n_av=10, fut_pref=1., momentum=0,
+                                  fut_pref_max=5.1, fut_pref_interval=0.1, fut_pref=1., momentum=0,
                                   w_regularizer=0, use_cuda_if_available=True, export_results=False,
                                   export_while_running=False, export_path=None, exp_description=None):
 
@@ -1003,7 +1005,7 @@ def labelleddata_exp_greedy_ErfTL(trainset, testset, w_teach, n_timesteps, n_pas
                                              weight_decay=w_regularizer)
             optimizer_copy.load_state_dict(optimizer.state_dict())
 
-            # Run dynamics using past data
+            # Run dynamics using past data <- improvable: running multiple dynamics
             av_running_cost_ss = 0
             for t in range(n_past_timesteps):
 

@@ -74,11 +74,9 @@ fut_pref_interval = Par.fut_pref_interval
 fut_pref_min = Par.fut_pref_min
 fut_pref_max = Par.fut_pref_max
 
-# Exp. parameters grid
-exp_parameters_grid = Par.exp_parameters_grid
-
 # N past experiments
 n_past_experiments = Par.n_past_experiments
+n_runs_experiments = Par.n_runs_experiments
 
 # Custom exp parameter (control_cost_pref)
 custom_control = True
@@ -86,15 +84,11 @@ if custom_control:
     idx = int(sys.argv[1])-1 # import action cost index from stdin
     control_cost_pref = control_cost_pref_arr[idx]
     print('Custom control cost pre-factor:', control_cost_pref)
-    print('Run index:', run_idx)
 
 # Strings/paths
 export_while_running = Par.export_while_running
 export_path = Par.export_path
 exp_description = Par.exp_description
-values = (100*control_cost_pref, batch_size, run_idx)
-exp_description_head = 'cprefdiv100#%d_batchsize#%d__run#%d' % values
-exp_description = exp_description_head + exp_description
 
 
 
@@ -172,28 +166,44 @@ print('Optimize fut. weight:', opt_pref)
 print('Use cuda if available:', use_cuda_if_available)
 print('\n')
 
-EGAP.labelleddata_exp_greedy(model_type=model_type,
-                             dataset=dataset,
-                             n_timesteps=n_timesteps,
-                             n_past_timesteps=n_timesteps_past,
-                             eta=learning_rate,
-                             dim_input=dim_input,
-                             a_min=a_min,
-                             a_max=a_max,
-                             n_gridpoints=n_gridpoints,
-                             beta=beta,
-                             control_cost_pref=control_cost_pref,
-                             transient_th=n_timesteps_transient_th,
-                             fut_pref=fut_pref,
-                             opt_pref=opt_pref,
-                             fut_pref_interval=fut_pref_interval,
-                             fut_pref_min=fut_pref_min,
-                             fut_pref_max=fut_pref_max,
-                             weight_future=weight_future,
-                             export_while_running=export_while_running,
-                             export_path=export_path,
-                             exp_description=exp_description,
-                             export_results=True,
-                             use_cuda_if_available=use_cuda_if_available,
-                             momentum=momentum,
-                             teacher_smoothlabels=teacher_smoothlabels)
+for i in range(n_past_experiments, n_past_experiments + n_runs_experiments):
+    run_idx = i+1
+    print('run %d/%d'%(run_idx, n_runs_experiments))
+    values = (100*control_cost_pref, batch_size, run_idx)
+    exp_description_head = 'cprefdiv100#%d_batchsize#%d__run#%d_' % values
+    experiment_description = exp_description_head + exp_description
+
+    # Set future weight opt. parameters
+    if Par.opt_pref:
+        if run_idx==1:
+            opt_pref = True
+            fut_pref = Par.fut_pref
+        else:
+            opt_pref = False
+            fut_pref = results['fut_pref']
+
+    results = EGAP.labelleddata_exp_greedy(model_type=model_type,
+                                           dataset=dataset,
+                                           n_timesteps=n_timesteps,
+                                           n_past_timesteps=n_timesteps_past,
+                                           eta=learning_rate,
+                                           dim_input=dim_input,
+                                           a_min=a_min,
+                                           a_max=a_max,
+                                           n_gridpoints=n_gridpoints,
+                                           beta=beta,
+                                           control_cost_pref=control_cost_pref,
+                                           transient_th=n_timesteps_transient_th,
+                                           fut_pref=fut_pref,
+                                           opt_pref=opt_pref,
+                                           fut_pref_interval=fut_pref_interval,
+                                           fut_pref_min=fut_pref_min,
+                                           fut_pref_max=fut_pref_max,
+                                           weight_future=weight_future,
+                                           export_while_running=export_while_running,
+                                           export_path=export_path,
+                                           exp_description=experiment_description,
+                                           export_results=True,
+                                           use_cuda_if_available=use_cuda_if_available,
+                                           momentum=momentum,
+                                           teacher_smoothlabels=teacher_smoothlabels)
