@@ -528,7 +528,7 @@ def labelleddata_exp_greedy(model_type, dataset, n_timesteps, n_past_timesteps, 
 
         # print progression
         if t==0:
-            print('%d/%d'%(t+1, n_past_timesteps)
+            print('%d/%d'%(t+1, n_past_timesteps))
         elif (t+1)%interval==0:
             print('%d/%d'%(t+1, n_past_timesteps))
 
