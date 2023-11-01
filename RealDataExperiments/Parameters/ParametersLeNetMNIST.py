@@ -24,7 +24,7 @@ learning_rate_LeNet = 1e-2
 learning_rate = learning_rate_LeNet
 gamma = 0.995
 beta = -np.log(gamma)
-transient_th = 1000 #25000
+transient_th = 25000 #25000
 momentum = 0.
 w_regularizer = 0
 

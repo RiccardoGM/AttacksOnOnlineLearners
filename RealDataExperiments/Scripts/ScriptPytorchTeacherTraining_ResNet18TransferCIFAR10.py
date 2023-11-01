@@ -162,6 +162,7 @@ loss_list = []
 acc_list = []
 
 # Run training
+print('Training started!')
 for epoch in range(n_epochs):
 
     # Backprop

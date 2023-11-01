@@ -47,8 +47,8 @@ batch_size = 10
 n_epochs = 100
 
 # Strings/paths
-path_data = local_path + 'OptimalControlAttacks/ModelsData/CIFAR10/Classes_%d_%d/ResNetTransf/'%(class1, class2)
-path_models = local_path + 'OptimalControlAttacks/Models/CIFAR10/Classes_%d_%d/ResNetTransf/'%(class1, class2)
+path_data = local_path + 'OptimalControlAttacks/RealDataExperiments/ModelsData/CIFAR10/Classes_%d_%d/ResNet18/'%(class1, class2)
+path_models = local_path + 'OptimalControlAttacks/RealDataExperiments/Models/CIFAR10/Classes_%d_%d/ResNet18/'%(class1, class2)
 description = 'classes#%d#%d_epochs#%d_batchnorm#%s'%(class1, class2, n_epochs, batchnorm_lastfc)
 
 ##############################################################
@@ -142,6 +142,8 @@ data_label_train = np.zeros(n_epochs*n_samples)
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 teacher_model.to(device)
 teacher_model.eval()
+
+print('Fine-tuning last layer')
 for epoch in range(n_epochs):
     for idx, (x, label) in enumerate(trainset_loader):
         x, label = x.to(device), label.to(device)
@@ -150,6 +152,8 @@ for epoch in range(n_epochs):
         idx_end = (idx+1)*batch_size + epoch*n_samples
         data_prelastfc_train[idx_start:idx_end,:] = prelastfc_batch.detach().cpu().numpy()
         data_label_train[idx_start:idx_end] = label.detach().cpu().numpy()
+    print('Epoch: %d/%d'%(epoch+1,n_epochs))
+print('Fine-tuning completed!')
 
 
 
