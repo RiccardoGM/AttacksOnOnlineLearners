@@ -17,7 +17,7 @@ gamma = 0.995
 beta = -np.log(gamma)/dim_input
 
 # N. samples
-n_timesteps = 2000
+n_timesteps = 4000
 n_timesteps_transient_th = 2000
 n_timesteps_past = 2*n_timesteps_transient_th
 n_samples_average = 200
@@ -31,12 +31,12 @@ n_a_gridpoints = 51
 greedy_weight_future_linear = dim_input/learning_rate
 control_cost_weight = 1. #1.
 control_cost_weight_arr = 10**np.arange(-2., 2.6, 0.4)
-opt_pref = False
+opt_pref = True
 fut_pref = 1.
 
 # N. averages
-n_runs_experiments = 2 #10
-n_runs_calibration = 4
+n_runs_experiments = 10 #10
+n_runs_calibration = 4 #4
 
 # Strings/paths
 local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
