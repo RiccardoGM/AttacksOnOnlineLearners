@@ -15,6 +15,8 @@ import scipy as sp
 
 ''' softReLU and derivative (step function) '''
 
+s_SReLU = .2
+
 def SReLU(x, s=s_SReLU):
     return x * 0.5 * sp.special.erfc(-(x/s)/np.sqrt(2)) + s * np.exp(-(x/s)**2/2.)/np.sqrt(2*np.pi)
 
@@ -69,8 +71,6 @@ def linear(x, w):
 
 
 '''  Perceptron '''
-
-s_SReLU = .2
 
 def perceptron(x, w=[], activation='Erf'):
 
