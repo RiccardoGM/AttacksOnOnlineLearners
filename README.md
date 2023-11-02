@@ -33,4 +33,4 @@ This repository contains the code implementing the attacks on data labels presen
 
 - **Synthetic data experiments**
 
-  	The implementation of the experiments using synthetic data, including the clairvoyant and reinforcement learning attacks, will be available soon.
+  	The implementation of the experiments using synthetic data, including the clairvoyant and reinforcement learning attacks, will be uploaded soon. Currently available: greedy attacks on linear regression.
