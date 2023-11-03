@@ -31,7 +31,7 @@ n_a_gridpoints = 51
 greedy_weight_future_linear = dim_input/learning_rate
 control_cost_weight = 1. #1.
 control_cost_weight_arr = 10**np.arange(-2., 2.6, 0.4)
-opt_pref = True
+opt_pref = False
 fut_pref = 1.
 
 # N. averages

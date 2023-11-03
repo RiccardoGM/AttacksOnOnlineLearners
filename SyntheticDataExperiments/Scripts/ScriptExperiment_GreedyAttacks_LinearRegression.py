@@ -12,7 +12,7 @@ import os
 local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
 sys.path.append(local_path+'OptimalControlAttacks/SyntheticDataExperiments/')
 from Modules import EmpiricalGreedyAttacks as EGA
-from Parameters import ParametersGreedyAttacksLinear as Par
+from Parameters import ParametersGreedyAttacks_LinearRegression as Par
 
 
 
