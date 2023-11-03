@@ -16,8 +16,7 @@ This repository contains the code implementing the attacks on data labels presen
 	* Script: Experiment_LeNetMNIST.py - Input: index (int) for the weight pre-factor grid.
 	* 	Imports parameters from ParametersLeNetMNIST.py.
 	* 	Runs several experiments (n_runs_experiments) for the chosen parameters.
-	* 	Uses opt_pref=False - the experiment reaching the lowest steady-state.
-	*	running average is used for downstream analysis.
+	* 	Uses opt_pref=False - the experiment reaching the lowest steady-state running average is used for downstream analysis.
 
 	CIFAR10-VGG11 (transfer learning):
 
