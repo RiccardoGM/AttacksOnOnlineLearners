@@ -6,14 +6,14 @@ This repository contains the code implementing the attacks on data labels presen
   	
 	MNIST-Perceptron:
 
-	* Script: *_PerceptronMNIST - Input: index (int) for the C-grid.
+	* Script: Experiment_PerceptronMNIST - Input: index (int) for the C-grid.
 	*	Imports parameters from ParametersPerceptronMNIST.py.
 	*	Runs several experiments (n_runs_experiments) for the chosen parameters.
 	*	Uses opt_pref=True, meaning that each simulation runs a calibration first.
 
 	MNIST-LeNet:
 
-	* Script: *_LeNetMNIST.py - Input: index (int) for the weight pre-factor grid.
+	* Script: Experiment_LeNetMNIST.py - Input: index (int) for the weight pre-factor grid.
 	* 	Imports parameters from ParametersLeNetMNIST.py.
 	* 	Runs several experiments (n_runs_experiments) for the chosen parameters.
 	* 	Uses opt_pref=False - the experiment reaching the lowest steady-state.
@@ -21,10 +21,10 @@ This repository contains the code implementing the attacks on data labels presen
 
 	CIFAR10-VGG11 (transfer learning):
 
-	* First train a teacher function using ScriptPytorchTeacherTraining_VGG11TransferCIFAR10.py.
+	* First train a teacher function using TeacherTraining_VGG11TransferCIFAR10.py.
 	* Note that we use pre-trained weights imported from Torchvision and only train the last layer.
-	* Then use ScriptPytorchExport_VGG11DataCIFAR10.py to export pre-last layer activations.
-	* Finally, use the exported data to run experiments via ScriptPytorchExperiment_TransferVGG11CIFAR10.py.
+	* Then use Export_VGG11DataCIFAR10.py to export pre-last layer activations.
+	* Finally, use the exported data to run experiments via Experiment_TransferVGG11CIFAR10.py.
 
 	CIFAR10-ResNet18 (transfer learning):
 
