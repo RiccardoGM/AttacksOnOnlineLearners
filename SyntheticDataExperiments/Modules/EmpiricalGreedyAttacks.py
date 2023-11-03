@@ -2,7 +2,7 @@
 
 import numpy as np
 import scipy as sp
-
+import scipy.special as spsc
 
 
 # ************************************************ #
@@ -18,10 +18,10 @@ import scipy as sp
 s_SReLU = .2
 
 def SReLU(x, s=s_SReLU):
-    return x * 0.5 * sp.special.erfc(-(x/s)/np.sqrt(2)) + s * np.exp(-(x/s)**2/2.)/np.sqrt(2*np.pi)
+    return x * 0.5 * spsc.erfc(-(x/s)/np.sqrt(2)) + s * np.exp(-(x/s)**2/2.)/np.sqrt(2*np.pi)
 
 def dSReLU(x, s=s_SReLU):
-    return 0.5 * sp.special.erfc(-(x/s)/np.sqrt(2))
+    return 0.5 * spsc.erfc(-(x/s)/np.sqrt(2))
 
 
 # ******************* ReLU *********************** #
@@ -40,7 +40,7 @@ def dReLU(x):
 ''' Erf and derivative '''
 
 def Erf(x):
-    return sp.special.erf(x)
+    return spsc.erf(x)
 
 def dErf(x):
     return (2./np.sqrt(np.pi)) * np.exp(-x**2)
