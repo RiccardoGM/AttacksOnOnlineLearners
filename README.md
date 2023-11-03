@@ -32,4 +32,12 @@ This repository contains the code implementing the attacks on data labels presen
 
 - **Synthetic data experiments**
 
-  	The implementation of the experiments using synthetic data, including the clairvoyant and reinforcement learning attacks, will be uploaded soon. Currently available: greedy attacks on linear regression.
+  	Greedy attacks: 
+	
+	* Linear regression. Scripts: Experiment_GreedyAttacks_LinearRegression.py, Experiment_GreedyAttacks_LinearRegression_FractionPoisonedSamples.py, parameters loaded from ParametersGreedyAttacks_LinearRegression.py. Notebook: Experiment_GreedyAttacks_LinearRegression_MultiDimControl.ipynb.
+	* Sigmoidal perceptron: Script Experiment_GreedyAttacks_SigmoidalPerceptron.py, parameters loaded from ParametersGreedyAttacks_SigmoidalPerceptron.py.
+	* 2-layer NN: Script Experiment_GreedyAttacks_2LayerNN.py, parameters loaded from ParametersGreedyAttacks_2LayerNN.py.
+	
+	Strategies comparison:
+	
+	* The implementation of clairvoyant and reinforcement learning attacks will be uploaded soon.
