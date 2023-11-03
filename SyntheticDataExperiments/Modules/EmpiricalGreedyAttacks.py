@@ -754,7 +754,7 @@ def exp_greedy_perceptron(x_incoming, x_past, x_buffer, x_test, eta, w_teach, w_
         else:
             cum_cost_dynamics[t] = cum_cost_dynamics[t-1] + total_cost * np.exp(-beta*eta*t)
 
-        # Relative distance
+        # Relative distance and accuracy
         input_s_test = np.dot(w_stud, x_test.T)/(dim_input**0.5)
         label_s_test = perceptron(input_s_test, activation=activation)
         s_pred_test = np.sign(label_s_test)
@@ -981,6 +981,10 @@ def exp_greedy_NN2L(x_incoming, x_past, x_buffer, x_test, eta, W_teach, v_teach,
     fut_pref_grid = fut_pref * np.ones_like(fut_pref_grid_opt)
     running_cost_vs_fut_pref = np.zeros(len(np.arange(fut_pref_min, fut_pref_max, fut_pref_interval)))
 
+    # Teach labels
+    t_pred_test = np.sign(label_t_test)
+    n_samples_test = x_test.shape[0]
+
     #************************************#
     #       Optimize future weight       #
     #************************************#
@@ -1098,6 +1102,7 @@ def exp_greedy_NN2L(x_incoming, x_past, x_buffer, x_test, eta, W_teach, v_teach,
     per_cost_dynamics = np.zeros(n_timesteps)
     cum_cost_dynamics = np.zeros(n_timesteps)
     d_dynamics = np.zeros(n_timesteps)
+    acc_dynamics = np.zeros(n_timesteps)
 
     print('Training...')
     for t in range(n_timesteps):
@@ -1147,27 +1152,29 @@ def exp_greedy_NN2L(x_incoming, x_past, x_buffer, x_test, eta, W_teach, v_teach,
         else:
             cum_cost_dynamics[t] = cum_cost_dynamics[t-1] + total_cost * np.exp(-beta*eta*t)
 
-        # Relative distance
+        # Relative distance and accuracy
         label_s_test = NN2L(x_test, W_stud, v_stud,
                             activation=activation,
                             output_scaling=output_scaling)
+        s_pred_test = np.sign(label_s_test)
         d_dynamics[t] = (np.mean((label_s_test-label_t_test)**2)/np.mean((label_o_test-label_t_test)**2))**0.5
+        acc_dynamics[t] = np.sum(s_pred_test==t_pred_test.reshape(1,-1), axis=1)/n_samples_test
 
         # Next student weights
         W_stud, v_stud = student_update_NN2L(W_stud=W_stud,
-                                               v_stud=v_stud,
-                                               W_target=W_target,
-                                               v_target=v_target,
-                                               W_teach=W_teach,
-                                               v_teach=v_teach,
-                                               x_batch=x_batch,
-                                               a=a,
-                                               eta=eta,
-                                               dim_input=dim_input,
-                                               activation=activation,
-                                               train_first_layer=train_first_layer,
-                                               train_second_layer=train_second_layer,
-                                               output_scaling=output_scaling)
+                                             v_stud=v_stud,
+                                             W_target=W_target,
+                                             v_target=v_target,
+                                             W_teach=W_teach,
+                                             v_teach=v_teach,
+                                             x_batch=x_batch,
+                                             a=a,
+                                             eta=eta,
+                                             dim_input=dim_input,
+                                             activation=activation,
+                                             train_first_layer=train_first_layer,
+                                             train_second_layer=train_second_layer,
+                                             output_scaling=output_scaling)
 
         # Print progress
         interval = int(n_timesteps/10)
@@ -1178,7 +1185,7 @@ def exp_greedy_NN2L(x_incoming, x_past, x_buffer, x_test, eta, W_teach, v_teach,
 
     # Results dictionary
     results = {}
-    results['v_dynamics'] = v_dynamics
+    results['v_dynamics'] = v_stud_dynamics
     results['a_dynamics'] = a_dynamics
     results['nef_cost_dynamics'] = nef_cost_dynamics
     results['per_cost_dynamics'] = per_cost_dynamics
@@ -1187,5 +1194,6 @@ def exp_greedy_NN2L(x_incoming, x_past, x_buffer, x_test, eta, W_teach, v_teach,
     results['running_cost_vs_fut_pref_opt_grid'] = running_cost_vs_fut_pref
     results['fut_pref_opt_grid'] = fut_pref_grid
     results['fut_pref'] = fut_pref
+    results['accuracy_dynamics'] = acc_dynamics
 
     return results

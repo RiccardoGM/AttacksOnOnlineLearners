@@ -12,18 +12,21 @@ import os
 local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
 sys.path.append(local_path+'OptimalControlAttacks/SyntheticDataExperiments/')
 from Modules import EmpiricalGreedyAttacks as EGA
-from Parameters import ParametersGreedyAttacks_SigmoidalPerceptron as Par
+from Parameters import ParametersGreedyAttacks_2LayerNN as Par
 
 
 
 ##############################################################
 #                                                            #
-#                         Parameters                         #
+#                        Parameters                          #
 #                                                            #
 ##############################################################
 
-# Activation
+# Model
 activation = Par.activation
+output_scaling = Par.output_scaling
+hiddenlayer_width = Par.hiddenlayer_width
+target_type = Par.target_type
 
 # Input data parameters
 dim_input = Par.dim_input
@@ -38,41 +41,51 @@ gamma = Par.gamma
 beta = Par.beta
 
 # N. samples
-n_timesteps = Par.n_timesteps
 n_timesteps_transient_th = Par.n_timesteps_transient_th
 n_timesteps_past = Par.n_timesteps_past
+n_timesteps = Par.n_timesteps
 n_samples_average = Par.n_samples_average
 n_samples_buffer = Par.n_samples_buffer
 n_samples_test = Par.n_samples_test
+
+# Test sets
+x_test = np.random.normal(mu_x, sigma_x, (n_samples_test, dim_input))
 
 # Control parameters
 a_min = Par.a_min
 a_max = Par.a_max
 n_a_gridpoints = Par.n_a_gridpoints
-greedy_weight_future_linear = Par.greedy_weight_future_linear
-control_cost_weight = Par.control_cost_weight
+
+# Control cost array
 control_cost_weight_arr = Par.control_cost_weight_arr
-opt_pref = Par.opt_pref
+control_cost_weight = Par.control_cost_weight
+
+# Future weight
+weight_future = Par.weight_future
 fut_pref = Par.fut_pref
+opt_pref = Par.opt_pref
 
 # N. averages
 n_runs_experiments = Par.n_runs_experiments
 n_runs_calibration = Par.n_runs_calibration
-
-# Test sets
-x_test = np.random.normal(mu_x, sigma_x, (n_samples_test, dim_input))
 
 # Strings/paths
 export_path = Par.export_path
 experiment_description = Par.experiment_description
 
 
+##############################################################
+#                                                            #
+#                      Run experiment                        #
+#                                                            #
+##############################################################
 
-##############################################################
-#                                                            #
-#                  Run multiple experiments                  #
-#                                                            #
-##############################################################
+attacker_on = True
+print('\n')
+print('Batch size:', batch_size)
+print('Attacker on:', attacker_on)
+print('Optimize fut. weight:', opt_pref)
+print('\n')
 
 results_dict = {}
 
@@ -83,15 +96,12 @@ for i, c_pref in enumerate(control_cost_weight_arr):
 
         # Initialize results dictionary
         results_dict['c#%d'%i]['P#%d'%P] = {}
-        results_dict['c#%d'%i]['P#%d'%P]['w_dynamics'] = np.zeros((n_runs_experiments, n_timesteps, dim_input))
         results_dict['c#%d'%i]['P#%d'%P]['a_dynamics'] = np.zeros((n_runs_experiments, n_timesteps))
         results_dict['c#%d'%i]['P#%d'%P]['d_dynamics'] = np.zeros((n_runs_experiments, n_timesteps))
         results_dict['c#%d'%i]['P#%d'%P]['accuracy_dynamics'] = np.zeros((n_runs_experiments, n_timesteps))
         results_dict['c#%d'%i]['P#%d'%P]['nef_cost_dynamics'] = np.zeros((n_runs_experiments, n_timesteps))
         results_dict['c#%d'%i]['P#%d'%P]['per_cost_dynamics'] = np.zeros((n_runs_experiments, n_timesteps))
         results_dict['c#%d'%i]['P#%d'%P]['cum_cost_dynamics'] = np.zeros((n_runs_experiments, n_timesteps))
-        results_dict['c#%d'%i]['P#%d'%P]['w_teach'] = np.zeros((n_runs_experiments, dim_input))
-        results_dict['c#%d'%i]['P#%d'%P]['w_target'] = np.zeros((n_runs_experiments, dim_input))
         results_dict['c#%d'%i]['P#%d'%P]['fut_pref'] = np.ones(n_runs_experiments)
         results_dict['c#%d'%i]['P#%d'%P]['fut_pref_opt_grid'] = [0]*n_runs_experiments
         results_dict['c#%d'%i]['P#%d'%P]['running_cost_vs_fut_pref_opt_grid'] = [0]*n_runs_experiments
@@ -106,16 +116,26 @@ for i, c_pref in enumerate(control_cost_weight_arr):
             print('run %d/%d'%(run+1, n_runs_experiments))
 
             # Teacher
-            w_teach = np.random.normal(0, 1, dim_input)
-            w_teach = w_teach/(np.sum(w_teach**2)/dim_input)**0.5
+            W_teach = np.random.normal(0, 1, (hiddenlayer_width, dim_input))
+            W_teach = W_teach / (np.sum(W_teach**2, axis=1).reshape(-1,1).repeat(dim_input, axis=1)/dim_input)**0.5
+            v_teach = np.random.normal(0, 1, hiddenlayer_width)
+            v_teach = v_teach / ((np.sum(v_teach**2)/hiddenlayer_width))**0.5
 
             # Target
-            w_target = -w_teach
+            if target_type=='FlippedTeacher':
+                W_target = W_teach.copy()
+                v_target = -v_teach.copy()
+            elif target_type=='Random':
+                W_target = np.random.normal(0, 1, (hiddenlayer_width, dim_input))
+                W_target = W_target / (np.sum(W_target**2, axis=1).reshape(-1,1).repeat(dim_input, axis=1)/dim_input)**0.5
+                v_target = np.random.normal(0, 1, hiddenlayer_width)
+                v_target = v_target / ((np.sum(v_target**2)/hiddenlayer_width))**0.5
 
             # Student (initial condition)
-            w_stud_0 = w_teach
+            W_stud_0 = W_teach.copy()
+            v_stud_0 = v_teach.copy()
 
-            # Arrays (assuming batch size as specified by 'batch_size')
+            # Arrays (assuming batch_size as specified above)
             x_incoming = np.random.normal(mu_x, sigma_x, (batch_size*n_timesteps, dim_input))
             x_past = np.random.normal(mu_x, sigma_x, (batch_size*n_timesteps_past, dim_input))
             x_buffer = np.random.normal(mu_x, sigma_x, (batch_size*n_samples_buffer, dim_input))
@@ -133,42 +153,40 @@ for i, c_pref in enumerate(control_cost_weight_arr):
             fut_pref_max = 10. + fut_pref_interval
 
             # Run single experiment
-            results_greedy = EGA.exp_greedy_perceptron(x_incoming=x_incoming,
-                                                       x_past=x_past,
-                                                       x_buffer=x_buffer,
-                                                       x_test=x_test,
-                                                       dim_input=dim_input,
-                                                       w_teach=w_teach,
-                                                       w_target=w_target,
-                                                       w_stud_0=w_stud_0,
-                                                       eta=learning_rate,
-                                                       beta=beta,
-                                                       control_cost_weight=control_cost_weight_run,
-                                                       a_min=a_min,
-                                                       a_max=a_max,
-                                                       batch_size=batch_size,
-                                                       weight_future=greedy_weight_future_linear,
-                                                       buffer_size=n_samples_average,
-                                                       activation=activation,
-                                                       transient_th=n_timesteps_transient_th,
-                                                       fut_pref=fut_pref,
-                                                       opt_pref=opt_pref,
-                                                       fut_pref_interval=fut_pref_interval,
-                                                       fut_pref_min=fut_pref_min,
-                                                       fut_pref_max=fut_pref_max,
-                                                       n_av=n_runs_calibration,
-                                                       n_gridpoints=n_a_gridpoints)
+            results_greedy = EGA.exp_greedy_NN2L(x_incoming=x_incoming,
+                                                 x_past=x_past,
+                                                 x_buffer=x_buffer,
+                                                 x_test=x_test,
+                                                 W_teach=W_teach,
+                                                 v_teach=v_teach,
+                                                 W_target=W_target,
+                                                 v_target=v_target,
+                                                 W_stud_0=W_stud_0,
+                                                 v_stud_0=v_stud_0,
+                                                 control_cost_weight=control_cost_weight_run,
+                                                 eta=learning_rate,
+                                                 dim_input=dim_input,
+                                                 beta=beta,
+                                                 a_min=a_min,
+                                                 a_max=a_max,
+                                                 batch_size=batch_size,
+                                                 weight_future=weight_future,
+                                                 buffer_size=n_samples_average,
+                                                 activation=activation,
+                                                 transient_th=n_timesteps_transient_th,
+                                                 fut_pref=fut_pref,
+                                                 opt_pref=opt_pref,
+                                                 n_av=n_runs_calibration,
+                                                 n_gridpoints=n_a_gridpoints,
+                                                 output_scaling=output_scaling)
 
             # Save results
-            results_dict['c#%d'%i]['P#%d'%P]['w_dynamics'][run] = results_greedy['w_dynamics']
             results_dict['c#%d'%i]['P#%d'%P]['a_dynamics'][run] = results_greedy['a_dynamics']
             results_dict['c#%d'%i]['P#%d'%P]['d_dynamics'][run] = results_greedy['d_dynamics']
             results_dict['c#%d'%i]['P#%d'%P]['accuracy_dynamics'][run] = results_greedy['accuracy_dynamics']
             results_dict['c#%d'%i]['P#%d'%P]['nef_cost_dynamics'][run] = results_greedy['nef_cost_dynamics']
             results_dict['c#%d'%i]['P#%d'%P]['per_cost_dynamics'][run] = results_greedy['per_cost_dynamics']
             results_dict['c#%d'%i]['P#%d'%P]['cum_cost_dynamics'][run] = results_greedy['cum_cost_dynamics']
-            results_dict['c#%d'%i]['P#%d'%P]['w_teach'][run] = w_teach
-            results_dict['c#%d'%i]['P#%d'%P]['w_target'][run] = w_target
             results_dict['c#%d'%i]['P#%d'%P]['fut_pref'][run] = results_greedy['fut_pref']
             results_dict['c#%d'%i]['P#%d'%P]['fut_pref_opt_grid'][run] = results_greedy['fut_pref_opt_grid']
             results_dict['c#%d'%i]['P#%d'%P]['running_cost_vs_fut_pref_opt_grid'][run] = results_greedy['running_cost_vs_fut_pref_opt_grid']

@@ -17,8 +17,8 @@ gamma = 0.995
 beta = -np.log(gamma)/dim_input
 
 # N. samples
-n_timesteps = 4000
-n_timesteps_transient_th = 2000
+n_timesteps = 5000
+n_timesteps_transient_th = 2500
 n_timesteps_past = 2*n_timesteps_transient_th
 n_samples_average = 200
 n_samples_buffer = 4*n_samples_average

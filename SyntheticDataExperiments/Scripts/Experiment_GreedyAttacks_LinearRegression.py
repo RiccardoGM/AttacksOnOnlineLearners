@@ -96,11 +96,14 @@ for i, c_pref in enumerate(control_cost_weight_arr):
         results_dict['c#%d'%i]['P#%d'%P]['fut_pref_opt_grid'] = [0]*n_runs_experiments
         results_dict['c#%d'%i]['P#%d'%P]['running_cost_vs_fut_pref_opt_grid'] = [0]*n_runs_experiments
 
+        # Set batch size
         batch_size = P
 
-        for j, run in enumerate(range(n_runs_experiments)):
-            if j%1==0:
-                print('run %d/%d'%(run+1, n_runs_experiments))
+        # Set cost of action
+        control_cost_weight_run = c_pref
+
+        for run in range(n_runs_experiments):
+            print('run %d/%d'%(run+1, n_runs_experiments))
 
             # Teacher
             w_teach = np.random.normal(0, 1, dim_input)
@@ -111,10 +114,6 @@ for i, c_pref in enumerate(control_cost_weight_arr):
 
             # Student (initial condition)
             w_stud_0 = w_teach
-
-            # Weight control
-            d_teach_target = 0.5 * np.mean((EGA.perceptron(w_teach, x_test, activation=activation)-EGA.perceptron(w_target, x_test, activation=activation))**2)
-            control_cost_weight_run = c_pref
 
             # Arrays (assuming batch size as specified by 'batch_size')
             x_incoming = np.random.normal(mu_x, sigma_x, (batch_size*n_timesteps, dim_input))
