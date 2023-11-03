@@ -85,9 +85,8 @@ for i, c_pref in enumerate(control_cost_weight_arr):
         results_dict['c#%d'%i]['fracpois100#%d'%(100*fraction_poisoned)] = {}
         results_dict['c#%d'%i]['fracpois100#%d'%(100*fraction_poisoned)]['d_dynamics'] = np.zeros((n_runs_experiments, n_timesteps))
 
-        for j, run in enumerate(range(n_runs_experiments)):
-            if j%1==0:
-                print('run %d/%d'%(run+1, n_runs_experiments))
+        for run in range(n_runs_experiments):
+            print('run %d/%d'%(run+1, n_runs_experiments))
 
             # Teacher
             w_teach = np.random.normal(0, 1, dim_input)

@@ -17,7 +17,8 @@ degrees = 10
 
 # Input data parameters
 dim_input = 10
-batch_size = 10
+batch_size = 1 # 1, 10
+batch_size_large = 100
 
 
 # Dynamics parameters
@@ -25,13 +26,13 @@ learning_rate_Perc = dim_input * 1e-2
 learning_rate = learning_rate_Perc
 gamma = 0.995
 beta = -np.log(gamma)
-transient_th = 10000 #10000
+transient_th = 2000 #10000
 momentum = 0.
 
 
 # Clean labels:
 '''ground truth or teacher (model trained on clean data) '''
-teacher_smoothlabels = True
+teacher_smoothlabels = True # Always True
 
 
 # N. samples
@@ -44,9 +45,9 @@ n_samples_test = 1000
 
 
 # Control parameters
-a_min = -0
+a_min = -0 # 0 or -2
 a_max = 1-a_min
-n_gridpoints = 21
+n_gridpoints = 21 # 21 or 51
 # take index as input
 control_cost_pref = 1.
 control_cost_pref_arr = 10**np.arange(-2., 2.5, .5)
@@ -58,10 +59,12 @@ calibrate_first_run_only = False
 fut_pref_interval = .5
 fut_pref_min = 1.
 fut_pref_max = 5. + fut_pref_interval
+fraction_poisoned_samples_arr = np.arange(0.2, 1.2, 0.2) # np.arange(0.2, 1.2, 0.2)
+
 
 # N. averages
 n_past_experiments = 0
-n_runs_experiments = 10
+n_runs_experiments = 10 # 10
 
 
 # Strings/paths

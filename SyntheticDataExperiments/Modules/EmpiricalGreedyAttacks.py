@@ -574,7 +574,7 @@ def student_update_NN2L(W_stud, v_stud, W_target, v_target, W_teach, v_teach, x_
 
 def exp_greedy_perceptron(x_incoming, x_past, x_buffer, x_test, eta, w_teach, w_target, dim_input,
                           weight_future=[], w_stud_0=[], a_min=0, a_max=1, beta=0.001, control_cost_weight=1.,
-                          batch_size=1, n_gridpoints=int(1e2), buffer_size=250, transient_th=4000,
+                          batch_size=1, n_gridpoints=int(1e2), buffer_size=250, transient_th=5000,
                           window_steadystate=1000, activation='Erf', opt_pref=False, fut_pref_min=0.1,
                           fut_pref_max=5.1, fut_pref_interval=0.1, n_av=10, fut_pref=1., fraction_poisoned_samples=1.):
 
@@ -801,7 +801,7 @@ def exp_greedy_perceptron(x_incoming, x_past, x_buffer, x_test, eta, w_teach, w_
 def exp_greedy_perceptron_multidimcontrol(x_incoming, x_past, x_buffer, x_test, eta, w_teach, w_target, dim_input,
                                           weight_future=[], w_stud_0=[], a_min=0, a_max=1, beta=0.001,
                                           control_cost_weight=1., batch_size=1, n_gridpoints=int(1e2),
-                                          buffer_size=250, transient_th=4000, window_steadystate=1000,
+                                          buffer_size=250, transient_th=5000, window_steadystate=1000,
                                           activation='Erf', opt_pref=False, fut_pref_min=0.1, fut_pref_max=5.1,
                                           fut_pref_interval=0.1, n_av=10, fut_pref=1., fraction_poisoned_samples=1.):
 
@@ -947,7 +947,7 @@ def exp_greedy_perceptron_multidimcontrol(x_incoming, x_past, x_buffer, x_test, 
 def exp_greedy_NN2L(x_incoming, x_past, x_buffer, x_test, eta, W_teach, v_teach, W_target, v_target,
                     dim_input, weight_future=[], W_stud_0=[], v_stud_0=[], a_min=0, a_max=1, beta=0.001,
                     control_cost_weight=1., batch_size=1, n_gridpoints=int(1e2), buffer_size=250,
-                    transient_th=4000, window_steadystate=1000, activation='Erf', opt_pref=False,
+                    transient_th=5000, window_steadystate=1000, activation='Erf', opt_pref=False,
                     fut_pref_min=0.1, fut_pref_max=5.1, fut_pref_interval=0.1, n_av=10, fut_pref=1.,
                     train_first_layer=True, train_second_layer=True, output_scaling='inv_sqroot'):
 

@@ -48,6 +48,16 @@ a_min = -0
 a_max = 1-a_min
 n_gridpoints = 21
 inv_lr = learning_rate**-1
+#********* Reference values *********#
+''' ->  With weight_future_arr = np.linspace(1, 19, 10) '''
+#   ->  Done: idx=2 (batch:1); idx=3 (batch:1)
+''' ->  With weight_future_arr = np.linspace(inv_lr/10, inv_lr, 10) '''
+#   ->  Done: idx=2 (batch:10); idx=3 (batch:10); idx=4 (batch:1,10); idx=5 (batch:1); idx=6 (batch:1)
+''' ->  With weight_future_arr = inv_lr + np.linspace(inv_lr/10, inv_lr, 10) '''
+#   ->  Done: idx=5 (batch:10)
+''' ->  With weight_future_arr = np.linspace(inv_lr, inv_lr*10, 10) '''
+#   ->  Done: idx=6 (batch:10)
+#************************************#
 #weight_future_arr = np.linspace(1, 19, 10)
 weight_future_arr = np.linspace(inv_lr/10, inv_lr, 10)
 #weight_future_arr = inv_lr + np.linspace(inv_lr/10, inv_lr, 10)
