@@ -37,7 +37,7 @@ fut_pref = 1.
 fraction_poisoned_samples_arr = np.arange(0.2, 1.2, 0.2)
 
 # N. averages
-n_runs_experiments = 1 #10
+n_runs_experiments = 10 #10
 n_runs_calibration = 4 #4
 
 # Strings/paths
