@@ -11,7 +11,7 @@ import sys
 import os
 local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
 sys.path.append(local_path+'OptimalControlAttacks/SyntheticDataExperiments/')
-from Modules import EmpiricalGreedyAttacks as EGA
+from Modules import GreedyAttacks as GA
 from Parameters import ParametersGreedyAttacks_LinearRegression as Par
 
 
@@ -133,7 +133,7 @@ for i, c_pref in enumerate(control_cost_weight_arr):
             fut_pref_max = 10. + fut_pref_interval
 
             # Run single experiment
-            results_greedy = EGA.exp_greedy_perceptron(x_incoming=x_incoming,
+            results_greedy = GA.exp_greedy_perceptron(x_incoming=x_incoming,
                                                        x_past=x_past,
                                                        x_buffer=x_buffer,
                                                        x_test=x_test,
