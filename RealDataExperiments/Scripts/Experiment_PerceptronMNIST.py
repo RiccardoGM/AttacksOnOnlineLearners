@@ -18,7 +18,7 @@ import sys
 import os
 local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
 sys.path.append(local_path+'OptimalControlAttacks/RealDataExperiments/')
-from Modules import EmpiricalGreedyAttacksPytorch as EGAP
+from Modules import GreedyAttacksPytorch as GAP
 from Parameters import ParametersPerceptronMNIST as Par
 
 
@@ -184,7 +184,7 @@ for i in range(n_past_experiments, n_past_experiments + n_runs_experiments):
                 opt_pref = False
                 fut_pref = results['fut_pref']
 
-    results = EGAP.labelleddata_exp_greedy(model_type=model_type,
+    results = GAP.labelleddata_exp_greedy(model_type=model_type,
                                            dataset=dataset,
                                            n_timesteps=n_timesteps,
                                            n_past_timesteps=n_timesteps_past,

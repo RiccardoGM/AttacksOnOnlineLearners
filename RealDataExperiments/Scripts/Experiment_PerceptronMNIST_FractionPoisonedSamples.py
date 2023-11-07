@@ -17,7 +17,7 @@ import sys
 import os
 local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
 sys.path.append(local_path+'OptimalControlAttacks/RealDataExperiments/')
-from Modules import EmpiricalGreedyAttacksPytorch as EGAP
+from Modules import GreedyAttacksPytorch as GAP
 from Parameters import ParametersPerceptronMNIST as Par
 
 ##############################################################
@@ -156,7 +156,7 @@ print('Teacher labels:', teacher_smoothlabels)
 print('Use cuda if available:', use_cuda_if_available)
 print('\n')
 
-res = EGAP.labelleddata_exp_greedy(model_type=model_type,
+res = GAP.labelleddata_exp_greedy(model_type=model_type,
                                    activation=activation,
                                    dataset=dataset,
                                    dim_input=dim_input,
@@ -210,7 +210,7 @@ for fraction_poisoned in fraction_poisoned_samples_arr:
     for run in range(n_runs_experiments):
         print('run %d/%d'%(run+1, n_runs_experiments))
 
-        res_fracpois = EGAP.labelleddata_exp_greedy(model_type=model_type,
+        res_fracpois = GAP.labelleddata_exp_greedy(model_type=model_type,
                                                     activation=activation,
                                                     dataset=dataset,
                                                     dim_input=dim_input,

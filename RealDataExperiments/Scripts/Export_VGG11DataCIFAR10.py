@@ -20,7 +20,7 @@ import sys
 import os
 local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
 sys.path.append(local_path+'OptimalControlAttacks/RealDataExperiments/')
-from Modules import EmpiricalGreedyAttacksPytorch as EGAP
+from Modules import GreedyAttacksPytorch as GAP
 
 
 
@@ -115,8 +115,8 @@ testset_loader = DataLoader(testset, batch_size=batch_size, shuffle=False)
 
 # Teacher model
 vgg11_config = [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M']
-vgg11_layers = EGAP.get_vgg_layers(vgg11_config, batch_norm=True)
-teacher_model = EGAP.VGG(vgg11_layers, denselayers_width=4096, dobatchnorm=batchnorm_lastfc)
+vgg11_layers = GAP.get_vgg_layers(vgg11_config, batch_norm=True)
+teacher_model = GAP.VGG(vgg11_layers, denselayers_width=4096, dobatchnorm=batchnorm_lastfc)
 model_name = 'epoch%d_' % n_epochs + description + '.pth'
 teacher_model.load_state_dict(torch.load(path_models+model_name, map_location=torch.device('cpu')))
 

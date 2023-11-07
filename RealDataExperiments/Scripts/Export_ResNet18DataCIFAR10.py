@@ -21,7 +21,7 @@ import sys
 import os
 local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
 sys.path.append(local_path+'OptimalControlAttacks/RealDataExperiments/')
-from Modules import EmpiricalGreedyAttacksPytorch as EGAP
+from Modules import GreedyAttacksPytorch as GAP
 
 
 
@@ -116,8 +116,8 @@ testset_loader = DataLoader(testset, batch_size=batch_size, shuffle=False)
 
 # Teacher model
 ResNetConfig = namedtuple('ResNetConfig', ['block', 'n_blocks', 'channels'])
-resnet18_config = ResNetConfig(block = EGAP.BasicBlock, n_blocks = [2,2,2,2], channels = [64, 128, 256, 512])
-teacher_model = EGAP.ResNet(resnet18_config, dobatchnorm=batchnorm_lastfc)
+resnet18_config = ResNetConfig(block = GAP.BasicBlock, n_blocks = [2,2,2,2], channels = [64, 128, 256, 512])
+teacher_model = GAP.ResNet(resnet18_config, dobatchnorm=batchnorm_lastfc)
 model_name = 'epoch%d_' % n_epochs + description + '.pth'
 teacher_model.load_state_dict(torch.load(path_models+model_name, map_location=torch.device('cpu')))
 

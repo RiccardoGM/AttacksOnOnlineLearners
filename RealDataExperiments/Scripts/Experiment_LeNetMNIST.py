@@ -18,7 +18,7 @@ import sys
 import os
 local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
 sys.path.append(local_path+'OptimalControlAttacks/RealDataExperiments/')
-from Modules import EmpiricalGreedyAttacksPytorch as EGAP
+from Modules import GreedyAttacksPytorch as GAP
 from Parameters import ParametersLeNetMNIST as Par
 
 
@@ -137,7 +137,7 @@ for i in range(n_past_experiments, n_past_experiments + n_runs_experiments):
     exp_description_head = 'cprefdiv100#%d_batchsize#%d_weightfutdiv100#%d_run#%d__@@__' % values
     exp_description = exp_description_head + exp_description
 
-    EGAP.labelleddata_exp_greedy(model_type=model_type,
+    GAP.labelleddata_exp_greedy(model_type=model_type,
                                  dataset=dataset,
                                  n_timesteps=n_timesteps,
                                  n_past_timesteps=n_timesteps_past,

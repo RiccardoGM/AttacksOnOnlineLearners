@@ -17,7 +17,7 @@ import sys
 import os
 local_path = '/Users/riccardo/Documents/GitHub/' #'path_to_progect_folder/'
 sys.path.append(local_path+'OptimalControlAttacks/RealDataExperiments/')
-from Modules import EmpiricalGreedyAttacksPytorch as EGAP
+from Modules import GreedyAttacksPytorch as GAP
 
 
 
@@ -124,7 +124,7 @@ else:
 filename = 'teacher_parameters.npy'
 teacher_parameters_arr = np.load(path_data+filename)
 teacher_parameters = torch.tensor(teacher_parameters_arr)
-teacher_model = EGAP.PerceptronModel(input_size=dim_input,
+teacher_model = GAP.PerceptronModel(input_size=dim_input,
                                      activation=activation,
                                      parameters=teacher_parameters)
 teacher_model_reg = copy.deepcopy(teacher_model).to(device)
@@ -203,7 +203,7 @@ for i, c_pref in enumerate(control_cost_pref_arr):
             fut_pref_max = 10. + fut_pref_interval
 
             # Run experiment
-            results_greedy = EGAP.labelleddata_exp_greedy_ErfTL(trainset=trainset,
+            results_greedy = GAP.labelleddata_exp_greedy_ErfTL(trainset=trainset,
                                                                 testset=testset,
                                                                 w_teach=w_teach,
                                                                 w_stud_0=w_teach,
