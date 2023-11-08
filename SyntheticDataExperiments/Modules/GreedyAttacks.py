@@ -132,8 +132,7 @@ def NN2L(X, W, v, activation='Erf', output_scaling='inv_sqroot'):
         raise ValueError('output_scaling not understood')
     in_L1 = np.matmul(W, X.T)/np.sqrt(dim_input)
     in_L2 = perceptron(in_L1, activation=activation)
-    output = np.sum(in_L2 * np.expand_dims(v, axis=-1), axis=-2)/pref_hlayer_size #np.sqrt(hlayer_size)
-    #output = np.squeeze(output)
+    output = np.sum(in_L2 * np.expand_dims(v, axis=-1), axis=-2)/pref_hlayer_size
 
     return output
 
@@ -599,8 +598,9 @@ def exp_greedy_perceptron(x_incoming, x_past, x_buffer, x_test, eta, w_teach, w_
     input_o_test = np.dot(w_target, x_test.T)/(dim_input**0.5)
     label_t_test = perceptron(input_t_test, activation=activation)
     label_o_test = perceptron(input_o_test, activation=activation)
-    d_target_teach = np.mean((label_o_test-label_t_test)**2)
-    control_cost_weight = control_cost_pref * d_target_teach
+    error_target_teach = np.mean((label_o_test-label_t_test)**2)
+    d_target_teach = 0.5 * error_target_teach
+    control_cost_weight = control_cost_pref * error_target_teach
     print(control_cost_weight)
 
     # Teach labels
@@ -762,7 +762,8 @@ def exp_greedy_perceptron(x_incoming, x_past, x_buffer, x_test, eta, w_teach, w_
         input_s_test = np.dot(w_stud, x_test.T)/(dim_input**0.5)
         label_s_test = perceptron(input_s_test, activation=activation)
         s_pred_test = np.sign(label_s_test)
-        d_dynamics[t] = (np.mean((label_s_test-label_t_test)**2)/np.mean((label_o_test-label_t_test)**2))**0.5
+        d_student_teach = 0.5 * np.mean((label_s_test-label_t_test)**2)
+        d_dynamics[t] = (d_student_teach/d_target_teach)**0.5
         acc_dynamics[t] = np.sum(s_pred_test==t_pred_test.reshape(1,-1), axis=1)/n_samples_test
 
         # Next student vector
@@ -826,8 +827,9 @@ def exp_greedy_perceptron_multidimcontrol(x_incoming, x_past, x_buffer, x_test, 
     input_o_test = np.dot(w_target, x_test.T)/(dim_input**0.5)
     label_t_test = perceptron(input_t_test, activation=activation)
     label_o_test = perceptron(input_o_test, activation=activation)
-    d_target_teach = np.mean((label_o_test-label_t_test)**2)
-    control_cost_weight = control_cost_pref * d_target_teach
+    error_target_teach = np.mean((label_o_test-label_t_test)**2)
+    d_target_teach = 0.5 * error_target_teach
+    control_cost_weight = control_cost_pref * error_target_teach
     print(control_cost_weight)
 
     # Teach labels
@@ -907,7 +909,8 @@ def exp_greedy_perceptron_multidimcontrol(x_incoming, x_past, x_buffer, x_test, 
         input_s_test = np.dot(w_stud, x_test.T)/(dim_input**0.5)
         label_s_test = perceptron(input_s_test, activation=activation)
         s_pred_test = np.sign(label_s_test)
-        d_dynamics[t] = (np.mean((label_s_test-label_t_test)**2)/np.mean((label_o_test-label_t_test)**2))**0.5
+        d_student_teach = 0.5 * np.mean((label_s_test-label_t_test)**2)
+        d_dynamics[t] = (d_student_teach/d_target_teach)**0.5
         acc_dynamics[t] = np.sum(s_pred_test==t_pred_test.reshape(1,-1), axis=1)/n_samples_test
 
         # Next student vector
@@ -976,8 +979,9 @@ def exp_greedy_NN2L(x_incoming, x_past, x_buffer, x_test, eta, W_teach, v_teach,
     label_t_test = NN2L(x_test, W_teach, v_teach,
                         activation=activation,
                         output_scaling=output_scaling)
-    d_target_teach = np.mean((label_o_test-label_t_test)**2)
-    control_cost_weight = control_cost_pref * d_target_teach
+    error_target_teach = np.mean((label_o_test-label_t_test)**2)
+    d_target_teach = 0.5 * error_target_teach
+    control_cost_weight = control_cost_pref * error_target_teach
     print('Control cost weight:', control_cost_weight)
 
     # Cost vs fut_pref
@@ -1161,7 +1165,8 @@ def exp_greedy_NN2L(x_incoming, x_past, x_buffer, x_test, eta, W_teach, v_teach,
                             activation=activation,
                             output_scaling=output_scaling)
         s_pred_test = np.sign(label_s_test)
-        d_dynamics[t] = (np.mean((label_s_test-label_t_test)**2)/np.mean((label_o_test-label_t_test)**2))**0.5
+        d_student_teach = 0.5 * np.mean((label_s_test-label_t_test)**2)
+        d_dynamics[t] = (d_student_teach/d_target_teach)**0.5
         acc_dynamics[t] = np.sum(s_pred_test==t_pred_test.reshape(1,-1), axis=1)/n_samples_test
 
         # Next student weights
