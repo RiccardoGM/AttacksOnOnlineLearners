@@ -16,7 +16,6 @@
 # Import statements
 import numpy as np
 import scipy.special as spsc
-import ipopt
 import sympy as sym
 from collections import OrderedDict
 from opty.direct_collocation import Problem
