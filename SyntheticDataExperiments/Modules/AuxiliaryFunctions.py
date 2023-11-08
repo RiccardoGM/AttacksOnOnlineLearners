@@ -1,7 +1,8 @@
 ## Import statements ##
 import matplotlib.pyplot as plt
 
-''' Plotting style set-up '''
+
+# ***************** Plot parameters ********************* #
 
 def SetPlotParams(magnification=1.0, ratio=float(2.2/2.7), fontsize=11., ylabelsize=None, xlabelsize=None, lines_w=1.5, ms=1.2):
 
