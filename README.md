@@ -40,4 +40,4 @@ This repository contains the code implementing the attacks on data labels presen
 	
 	Strategies comparison:
 	
-	* The implementation of clairvoyant and reinforcement learning attacks will be uploaded soon.
+	* Clairvoyant and reinforcement learning attacks implemented for the linear regression problem - sigmoidal perceptron and 2-layer NN will be uploaded soon. 
