@@ -32,14 +32,14 @@ n_samples_test = n_timesteps
 time_window = 1000
 
 # Control parameters
-a_min = -0 # 0
+a_min = -2 # 0 or -2
 a_max = 1-a_min #1
-n_a_gridpoints = 21
+n_a_gridpoints = 101
 n_runs_calibration = 10
 control_cost_weight = 1.
 greedy_weight_future = dim_input/learning_rate
 opt_pref = True
-fut_pref = 2
+fut_pref = 1.6
 
 # DeepRL Agent
 agent_model_name = 'TD3'
