@@ -34,7 +34,7 @@ n_runs_calibration = 10
 control_cost_weight = 1.
 greedy_weight_future = dim_input/learning_rate
 opt_pref = True
-fut_pref = 2
+fut_pref = 1.6
 
 # DeepRL Agent
 agent_model_name = 'TD3'
