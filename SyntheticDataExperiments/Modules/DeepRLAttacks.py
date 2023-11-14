@@ -38,8 +38,8 @@ class EnvironmentPerceptron(gym.Env):
         self.time_window = time_window
         self.control_cost_weight = control_cost_weight
         self.activation = activation
-        self.w_teach = w_teach #.astype(np.float32)
-        self.w_target = w_target #.astype(np.float32)
+        self.w_teach = w_teach
+        self.w_target = w_target
 
         # Set time
         self.timestep = 0
@@ -53,7 +53,7 @@ class EnvironmentPerceptron(gym.Env):
             rho = self.rho_grid[self.rho_idx]
             self.w_stud_0 = self.w_teach * (1-rho) + self.w_target * rho
         else:
-            self.w_stud_0 = w_stud_0 #.astype(np.float32)
+            self.w_stud_0 = w_stud_0
         self.w_stud = self.w_stud_0
 
         # Data stream
@@ -68,7 +68,7 @@ class EnvironmentPerceptron(gym.Env):
         self.a_min = a_min
         self.a_max = a_max
         self.action_space = gym.spaces.Box(low=self.a_min, high=self.a_max, shape=(1,), dtype=np.float32)
-        high = 1e9 #np.inf
+        high = 1e9
         self.observation_space = gym.spaces.Box(low=-high, high=high, shape=((1+self.batch_size)*self.dim_input,), dtype=np.float32)
 
 
@@ -96,30 +96,6 @@ class EnvironmentPerceptron(gym.Env):
                        'Shuffle input data': self.shuffle_array}
         return_obs = np.concatenate((self.w_stud.reshape(1,-1), self.x_batch), axis=0, dtype=np.float32).flatten()
         return return_obs, return_info
-
-
-    def perceptron(self, x):
-        if self.activation=='Erf':
-            output = sp.special.erf(x)
-        elif self.activation=='ReLU':
-            output = x * (x > 0)
-        elif self.activation=='Linear':
-            output = x
-        else:
-            raise ValueError('Supported activations are: Erf, ReLU, SReLU, Linear')
-        return output
-
-
-    def d_perceptron(self, x):
-        if self.activation=='Erf':
-            output = (2./np.sqrt(np.pi)) * np.exp(-x**2)
-        elif self.activation=='ReLU':
-            output = 1. * (x > 0)
-        elif self.activation=='Linear':
-            output = 1.
-        else:
-            raise ValueError('Supported activations are: Erf, ReLU, SReLU, Linear')
-        return output
 
 
     def student_update(self, a):
@@ -160,7 +136,7 @@ class EnvironmentPerceptron(gym.Env):
         terminated = bool(self.timestep > self.n_timesteps-2)
         truncated = False
 
-        # Optionally we can pass additional info
+        # Info
         info = {'Action': action,
                 'Per. cost': per_cost,
                 'Nef cost': nef_cost}

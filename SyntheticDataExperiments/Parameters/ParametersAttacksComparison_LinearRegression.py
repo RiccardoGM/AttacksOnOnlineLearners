@@ -19,7 +19,7 @@ beta = -np.log(gamma)/dim_input
 
 # N. samples
 n_timesteps = 5000
-n_timesteps_transient_th = 20000
+n_timesteps_transient_th = 20000 #20000
 n_timesteps_past = 2*n_timesteps_transient_th
 n_samples_average = 200
 n_samples_buffer = 4*n_samples_average
@@ -27,7 +27,7 @@ n_samples_test = 10000
 time_window = 1000
 
 # Control parameters
-a_min = -2 #0
+a_min = -2 #-2, 0
 a_max = 1-a_min #1
 n_a_gridpoints = 101
 n_runs_calibration = 10
@@ -45,7 +45,7 @@ action_noise_std = .2 * np.ones(n_actions)
 use_small_achitecture = False
 randomise_initial_condition = False
 shuffle_array = True
-learning_rate_agent = 0.001
+learning_rate_agent = 0.0001
 activation_fn = torch.nn.Tanh
 n_episodes = 8
 save_freq = 1000
