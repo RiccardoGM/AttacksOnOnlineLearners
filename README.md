@@ -42,5 +42,5 @@ This repository contains the code implementing the attacks on data labels presen
 	
 	* For each architecture (linear regression, sigmoidal perceptron, 2-layer NN):
 	* 	Parameters are set in the corresponding file ParametersAttacksComparison_*.py.
-	* 	Train the TD3 agent using the notebook RLAgentTraining_*.ipynb.
+	* 	Train the RL TD3 agent using the notebook RLAgentTraining_*.ipynb.
 	*	Compare constant, reinforcement learning, greedy, and clairvoyant attacks using the notebook StrategiesComparison_*.ipynb.
