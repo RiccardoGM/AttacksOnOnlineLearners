@@ -40,4 +40,7 @@ This repository contains the code implementing the attacks on data labels presen
 	
 	Strategies comparison:
 	
-	* Clairvoyant and reinforcement learning attacks implemented for the linear regression problem - sigmoidal perceptron and 2-layer NN will be uploaded soon. 
+	* For each architecture (linear regression, sigmoidal perceptron, 2-layer NN):
+	* 	Parameters are set in the corresponding file ParametersAttacksComparison_*.py.
+	* 	Train the TD3 agent using the notebook RLAgentTraining_*.ipynb.
+	*	Compare constant, reinforcement learning, greedy, and clairvoyant attacks using the notebook StrategiesComparison_*.ipynb.
