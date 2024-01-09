@@ -9,11 +9,11 @@ This repository contains the code implementing the attacks on data labels presen
 	* Script: Experiment_PerceptronMNIST - Input: index (int) for the C-grid.
 	*	Imports parameters from ParametersPerceptronMNIST.py.
 	*	Runs several experiments (n_runs_experiments) for the chosen parameters.
-	*	Uses opt_pref=True, meaning that each simulation runs a calibration first.
+	*	Uses opt_pref=True, meaning that each simulation first runs a calibration of the future weight pre-factor ($\tilde{\gamma}$).
 
 	LeNet, MNIST:
 
-	* Script: Experiment_LeNetMNIST.py - Input: index (int) for the weight pre-factor grid.
+	* Script: Experiment_LeNetMNIST.py - Input: index (int) for the future weight pre-factor ($\tilde{\gamma}$) grid.
 	* 	Imports parameters from ParametersLeNetMNIST.py.
 	* 	Runs several experiments (n_runs_experiments) for the chosen parameters.
 	* 	Uses opt_pref=False - the experiment reaching the lowest steady-state running average is used for downstream analysis.
