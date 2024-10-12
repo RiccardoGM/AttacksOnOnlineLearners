@@ -2,7 +2,7 @@
 
 This repository includes the code used to implement the data label attacks described in the paper *"Attacks On Online Learners: A Teacher-Student Analysis"* (https://arxiv.org/abs/2305.11132).
 
-- **Real data greedy experiments**
+- **Greedy attacks on real data**
   	
 	Perceptron, MNIST:
 
@@ -30,7 +30,7 @@ This repository includes the code used to implement the data label attacks descr
 	* Experiments follow the same protocol used for VGG11.
   
 
-- **Synthetic data experiments**
+- **Attacks on synthetic data**
 
   	Greedy attacks: 
 	
