@@ -1,6 +1,6 @@
 # Attacks on Online Learners
 
-This repository includes the code used to implement the data label attacks described in the paper *"Attacks On Online Learners: A Teacher-Student Analysis"* (https://arxiv.org/abs/2305.11132).
+This repository includes the code used to implement the experiments on data label attacks described in the paper *"Attacks On Online Learners: A Teacher-Student Analysis"* presented at [NeurIPS 2023](https://proceedings.neurips.cc/paper_files/paper/2023/hash/46e37aeccafc3b4b697b17b8a36f3b30-Abstract-Conference.html).
 
 - **Greedy attacks on real data**
   	
